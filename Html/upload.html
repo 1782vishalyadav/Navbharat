@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload PDF</title>
+</head>
+<body>
+  <h2>Upload New PDF</h2>
+  <input type="file" id="pdfFile" accept="application/pdf" />
+  <button onclick="uploadPDF()">Upload</button>
+  <p id="status"></p>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://YOUR_PROJECT_ID.https://jcvjjnxvjyhwkyttncqw.supabase.co',         // replace this
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjdmpqbnh2anlod2t5dHRuY3F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzOTA2ODMsImV4cCI6MjA2Nzk2NjY4M30.aNsZLlMts4DQxBAkqXkLi0imYUEMr0OPr9vpGxdYQ70'                         // replace this
+    );
+
+    async function uploadPDF() {
+      const file = document.getElementById('pdfFile').files[0];
+      if (!file) {
+        document.getElementById('status').textContent = "Please choose a file.";
+        return;
+      }
+
+      const { error } = await supabase.storage
+        .from('pdfs')
+        .upload('latest.pdf', file, { upsert: true });
+
+      if (error) {
+        document.getElementById('status').textContent = "Upload failed: " + error.message;
+      } else {
+        document.getElementById('status').textContent = "Upload successful!";
+      }
+    }
+  </script>
+</body>
+</html>
