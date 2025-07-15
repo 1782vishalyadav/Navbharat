@@ -62,25 +62,40 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
     // Date display
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', {
-      year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', {
+        year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+      });
 
-    const supabase = supabase.createClient(
-      'https://jcvjjnxvjyhwkyttncqw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjdmpqbnh2anlod2t5dHRuY3F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzOTA2ODMsImV4cCI6MjA2Nzk2NjY4M30.aNsZLlMts4DQxBAkqXkLi0imYUEMr0OPr9vpGxdYQ70'
-    );
+      // Initialize Supabase client
+      window.supabase = supabase.createClient(
+        'https://jcvjjnxvjyhwkyttncqw.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjdmpqbnh2anlod2t5dHRuY3F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzOTA2ODMsImV4cCI6MjA2Nzk2NjY4M30.aNsZLlMts4DQxBAkqXkLi0imYUEMr0OPr9vpGxdYQ70'
+      );
+
+      // Auto-check login on page load
+      supabase.auth.getUser().then(({ data }) => {
+        if (data && data.user) {
+          document.getElementById('login-container').style.display = 'none';
+          document.getElementById('upload-container').style.display = 'block';
+        }
+      });
+    });
 
     async function signIn() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      document.getElementById('login-status').textContent = "Logging in...";
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         document.getElementById('login-status').textContent = "❌ Login failed: " + error.message;
-      } else {
+      } else if (data && data.user) {
+        document.getElementById('login-status').textContent = "";
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('upload-container').style.display = 'block';
+      } else {
+        document.getElementById('login-status').textContent = "❌ Login failed: Unknown error.";
       }
     }
 
@@ -88,27 +103,31 @@
       await supabase.auth.signOut();
       document.getElementById('upload-container').style.display = 'none';
       document.getElementById('login-container').style.display = 'block';
+      document.getElementById('login-status').textContent = "";
+      document.getElementById('status').textContent = "";
+      document.getElementById('email').value = "";
+      document.getElementById('password').value = "";
     }
 
     async function uploadPDF() {
-      const user = (await supabase.auth.getUser()).data.user;
-      if (!user) return alert('Not authorized');
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData || !userData.user) {
+        alert('Not authorized');
+        return;
+      }
 
       const file = document.getElementById('pdfFile').files[0];
+      if (!file) {
+        document.getElementById('status').textContent = "❌ Please select a PDF file.";
+        return;
+      }
+      document.getElementById('status').textContent = "Uploading...";
       const { error } = await supabase.storage.from('pdfs').upload('latest.pdf', file, { upsert: true });
 
       document.getElementById('status').textContent = error
         ? "❌ Upload failed: " + error.message
         : "✅ Upload successful!";
     }
-
-    // Auto-check login on page load
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        document.getElementById('login-container').style.display = 'none';
-        document.getElementById('upload-container').style.display = 'block';
-      }
-    });
   </script>
 </body>
 </html>
