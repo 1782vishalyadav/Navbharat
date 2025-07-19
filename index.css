@@ -99,6 +99,23 @@ iframe {
   background: #fff;
 }
 
+.pdf-viewer iframe,
+.pdf-viewer embed {
+  width: 100%;
+  max-width: 100vw;
+  border-radius: 8px;
+  background: #fff;
+}
+
+@media (max-width: 600px) {
+  .pdf-viewer iframe,
+  .pdf-viewer embed {
+    height: 80vh !important;
+    min-height: 320px;
+    max-height: 95vh;
+  }
+}
+
 main {
   padding-bottom: 40px;
 }
