@@ -124,7 +124,7 @@
       document.getElementById('status').textContent = "Uploading...";
       console.log("Uploading file:", file);
 
-      const { data, error } = await supabase.storage.from('pdfs').upload('latest.pdf', file, { upsert: true });
+      const { data, error } = await supabase.storage.from('pdf').upload('latest.pdf', file, { upsert: true });
       console.log("Upload result:", data, error);
 
       document.getElementById('status').textContent = error
