@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="index.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
   <header>
@@ -52,6 +53,9 @@
         </a>
       </div>
     </div>
+    <!-- Add this button where you want the share option, e.g., below the PDF viewer -->
+    <button id="shareBtn" style="margin:16px auto;display:block;">Share Website</button>
+    <div id="pdfDetails" style="margin:12px 0; text-align:center; color:#444;"></div>
   </main>
   <footer>
     <div class="footer-content">
@@ -61,9 +65,30 @@
     </div>
   </footer>
 
-<!-- Add this where you want the thumbnail -->
 <canvas id="pdfThumb" width="120" height="160" style="display:block;margin:0 auto 12px auto;border-radius:4px;box-shadow:0 2px 8px #0001;"></canvas>
 <script>
+  // Initialize Supabase client
+  const supabase = window.supabase = window.supabase || supabase.createClient(
+    'https://jcvjjnxvjyhwkyttncqw.supabase.co',
+    'YOUR_PUBLIC_ANON_KEY'
+  );
+
+  async function showPdfDetails() {
+    // List files in the 'pdf' bucket
+    const { data, error } = await supabase.storage.from('pdf').list('', { limit: 1, sortBy: { column: 'updated_at', order: 'desc' } });
+    if (error || !data || !data.length) return;
+
+    const file = data.find(f => f.name === 'latest.pdf');
+    if (!file) return;
+
+    document.getElementById('pdfDetails').innerHTML = `
+      <b>File:</b> ${file.name} <br>
+      <b>Size:</b> ${(file.metadata.size/1024).toFixed(1)} KB <br>
+      <b>Last Updated:</b> ${new Date(file.updated_at).toLocaleString()}
+    `;
+  }
+  showPdfDetails();
+
   const url = "https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf?v=" + Date.now();
   const canvas = document.getElementById('pdfThumb');
   if (window['pdfjsLib']) {
@@ -79,6 +104,18 @@
       canvas.style.display = 'none';
     });
   }
+
+  document.getElementById('shareBtn').onclick = function() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        text: 'Check out the latest edition of नव दृष्टिकोन!',
+        url: window.location.href
+      });
+    } else {
+      alert('Sharing is not supported in this browser.');
+    }
+  };
 </script>
 
   
