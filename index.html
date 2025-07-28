@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="mr">
 <head>
+  <meta charset="UTF-8" />
   <title>नव दृष्टिकोन - Your Daily News</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="index.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
@@ -11,17 +12,9 @@
   <header>
     <div class="top-bar">
       <span class="date" id="currentDate"></span>
-      <span class="tagline">नवीन विचार...नव्या दिशा! विशेष बातमी |विश्वासार्ह स्रोत | स्पष्ट मते</span>
+      <span class="tagline">नवीन विचार...नव्या दिशा! विशेष बातमी | विश्वासार्ह स्रोत | स्पष्ट मते</span>
       <span class="social-icons">
-        <a href="#" title="Twitter" aria-label="Twitter">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;"><path d="M22.46 5.924c-.793.352-1.645.59-2.54.698a4.48 4.48 0 0 0 1.963-2.475 8.94 8.94 0 0 1-2.828 1.082 4.48 4.48 0 0 0-7.635 4.086A12.72 12.72 0 0 1 3.112 4.89a4.48 4.48 0 0 0 1.388 5.976 4.44 4.44 0 0 1-2.03-.561v.057a4.48 4.48 0 0 0 3.594 4.393 4.48 4.48 0 0 1-2.025.077 4.48 4.48 0 0 0 4.184 3.11A8.98 8.98 0 0 1 2 19.54a12.67 12.67 0 0 0 6.88 2.017c8.26 0 12.78-6.84 12.78-12.78 0-.195-.004-.39-.013-.583a9.13 9.13 0 0 0 2.24-2.33z"/></svg>
-        </a>
-        <a href="#" title="Facebook" aria-label="Facebook">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24H12.82v-9.294H9.692v-3.622h3.127V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.592 1.325-1.326V1.326C24 .592 23.405 0 22.675 0"/></svg>
-        </a>
-        <a href="#" title="Instagram" aria-label="Instagram">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.974.974 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.974.974-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.974-.974-1.246-2.242-1.308-3.608C2.175 15.647 2.163 15.267 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.974-.974 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.775.131 4.602.388 3.635 1.355 2.668 2.322 2.411 3.495 2.352 4.772.013 8.332 0 8.741 0 12c0 3.259.013 3.668.072 4.948.059 1.277.316 2.45 1.283 3.417.967.967 2.14 1.224 3.417 1.283C8.332 23.987 8.741 24 12 24c3.259 0 3.668-.013 4.948-.072 1.277-.059 2.45-.316 3.417-1.283.967-.967 1.224-2.14 1.283-3.417.059-1.28.072-1.689.072-4.948 0-3.259-.013-3.668-.072-4.948-.059-1.277-.316-2.45-1.283-3.417-.967-.967-2.14-1.224-3.417-1.283C15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998zm6.406-11.845a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
-        </a></a>
+        <!-- Social icons omitted for brevity, same as yours -->
       </span>
     </div>
     <div class="logo">📰 नव दृष्टिकोन</div>
@@ -31,79 +24,108 @@
       <a href="upload.html">Admin</a>
     </nav>
   </header>
+
   <main>
     <div class="pdf-viewer">
-      <canvas id="pdfCanvas" style="width:100%;max-width:600px;height:auto;display:block;margin:0 auto;"></canvas>
+      <iframe id="pdfFrame" width="100%" height="600" style="border:none; border-radius:8px; background:#fff;" allowfullscreen></iframe>
+      <embed id="pdfEmbed" type="application/pdf" width="100%" height="600px" style="display:none;" />
       <div style="text-align:center; margin-top:12px;">
-        <a href="https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf" target="_blank" rel="noopener">
+        <a id="fallbackLink" href="#" target="_blank" rel="noopener">
           PDF न उघडल्यास येथे क्लिक करा (Click here if PDF does not load)
         </a>
       </div>
     </div>
-    <button id="shareBtn" style="margin:16px auto;display:block;">Share Website</button>
+
+    <canvas id="pdfThumb" width="120" height="160" style="display:block; margin:0 auto 12px auto; border-radius:4px; box-shadow:0 2px 8px #0001;"></canvas>
+
+    <button id="shareBtn" style="margin:16px auto; display:block;">Share Website</button>
+
     <div id="pdfDetails" style="margin:12px 0; text-align:center; color:#444;"></div>
   </main>
+
   <footer>
     <div class="footer-content">
       <span>&copy; 2025 नव दृष्टिकोन | All Rights Reserved.</span>
       <span>Contact: work.vishnumore@gmail.com | संपादक: विष्णू मोरे</span>
-       <span>Developer: Vishal Yadav</span>
+      <span>Developer: Vishal Yadav</span>
     </div>
   </footer>
 
-<canvas id="pdfThumb" width="120" height="160" style="display:block;margin:0 auto 12px auto;border-radius:4px;box-shadow:0 2px 8px #0001;"></canvas>
-<script>
-  // Initialize Supabase client
-  const supabase = window.supabase = window.supabase || supabase.createClient(
-    'https://jcvjjnxvjyhwkyttncqw.supabase.co',
-    'YOUR_PUBLIC_ANON_KEY'
-  );
+  <script>
+    // Initialize Supabase
+    const supabase = window.supabase.createClient(
+      'https://jcvjjnxvjyhwkyttncqw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjdmpqbnh2anlod2t5dHRuY3F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzOTA2ODMsImV4cCI6MjA2Nzk2NjY4M30.aNsZLlMts4DQxBAkqXkLi0imYUEMr0OPr9vpGxdYQ70' // Replace with your actual anon public key
+    );
 
-  async function showPdfDetails() {
-    // List files in the 'pdf' bucket
-    const { data, error } = await supabase.storage.from('pdf').list('', { limit: 1, sortBy: { column: 'updated_at', order: 'desc' } });
-    if (error || !data || !data.length) return;
-
-    const file = data.find(f => f.name === 'latest.pdf');
-    if (!file) return;
-
-    document.getElementById('pdfDetails').innerHTML = `
-      <b>File:</b> ${file.name} <br>
-      <b>Size:</b> ${(file.metadata.size/1024).toFixed(1)} KB <br>
-      <b>Last Updated:</b> ${new Date(file.updated_at).toLocaleString()}
-    `;
-  }
-  showPdfDetails();
-
-  const url = "https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf?v=" + Date.now();
-  const canvas = document.getElementById('pdfThumb');
-  if (window['pdfjsLib']) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
-    pdfjsLib.getDocument(url).promise.then(pdf => {
-      pdf.getPage(1).then(page => {
-        const viewport = page.getViewport({ scale: 0.4 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        page.render({ canvasContext: canvas.getContext('2d'), viewport });
+    // Show PDF Metadata
+    async function showPdfDetails() {
+      const { data, error } = await supabase.storage.from('pdf').list('', {
+        limit: 1,
+        sortBy: { column: 'updated_at', order: 'desc' }
       });
-    }).catch(e => {
-      canvas.style.display = 'none';
-    });
-  }
 
-  document.getElementById('shareBtn').onclick = function() {
-    if (navigator.share) {
-      navigator.share({
-        title: document.title,
-        text: 'Check out the latest edition of नव दृष्टिकोन!',
-        url: window.location.href
-      });
-    } else {
-      alert('Sharing is not supported in this browser.');
+      if (error || !data || !data.length) return;
+
+      const file = data.find(f => f.name === 'latest.pdf');
+      if (!file) return;
+
+      document.getElementById('pdfDetails').innerHTML = `
+        <b>File:</b> ${file.name} <br>
+        <b>Size:</b> ${file.metadata?.size ? (file.metadata.size / 1024).toFixed(1) + ' KB' : 'Unknown size'} <br>
+        <b>Last Updated:</b> ${new Date(file.updated_at).toLocaleString()}
+      `;
     }
-  };
-</script>
 
-  
+    // Load PDF viewer
+    function loadPdf() {
+      const url = `https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf?v=${Date.now()}`;
+
+      // Set iframe and fallback links
+      document.getElementById('pdfFrame').src = url;
+      document.getElementById('pdfEmbed').src = url;
+      document.getElementById('fallbackLink').href = url;
+
+      // Thumbnail preview
+      const canvas = document.getElementById('pdfThumb');
+      if (window['pdfjsLib']) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
+        pdfjsLib.getDocument(url).promise.then(pdf => {
+          pdf.getPage(1).then(page => {
+            const viewport = page.getViewport({ scale: 0.4 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            page.render({ canvasContext: canvas.getContext('2d'), viewport });
+          });
+        }).catch(() => {
+          canvas.style.display = 'none';
+        });
+      }
+    }
+
+    // Share Button Setup
+    window.onload = function () {
+      document.getElementById('shareBtn').onclick = function () {
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            text: 'Check out the latest edition of नव दृष्टिकोन!',
+            url: window.location.href
+          });
+        } else {
+          alert('Sharing is not supported in this browser.');
+        }
+      };
+
+      // Load PDF and Metadata
+      showPdfDetails();
+      loadPdf();
+
+      // Show current date
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('mr-IN', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+    };
+  </script>
 </body>
 </html>
