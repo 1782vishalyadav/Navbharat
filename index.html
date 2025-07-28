@@ -14,7 +14,7 @@
       <span class="date" id="currentDate"></span>
       <span class="tagline">नवीन विचार...नव्या दिशा! विशेष बातमी | विश्वासार्ह स्रोत | स्पष्ट मते</span>
       <span class="social-icons">
-        <!-- Social icons omitted for brevity, same as yours -->
+        <!-- Social icons omitted for brevity -->
       </span>
     </div>
     <div class="logo">📰 नव दृष्टिकोन</div>
@@ -29,6 +29,7 @@
     <div class="pdf-viewer">
       <iframe id="pdfFrame" width="100%" height="600" style="border:none; border-radius:8px; background:#fff;" allowfullscreen></iframe>
       <embed id="pdfEmbed" type="application/pdf" width="100%" height="600px" style="display:none;" />
+      <canvas id="pdfThumb"></canvas>
       <div style="text-align:center; margin-top:12px;">
         <a id="fallbackLink" href="#" target="_blank" rel="noopener">
           PDF न उघडल्यास येथे क्लिक करा (Click here if PDF does not load)
@@ -36,10 +37,7 @@
       </div>
     </div>
 
-    <canvas id="pdfThumb" width="120" height="160" style="display:block; margin:0 auto 12px auto; border-radius:4px; box-shadow:0 2px 8px #0001;"></canvas>
-
     <button id="shareBtn" style="margin:16px auto; display:block;">Share Website</button>
-
     <div id="pdfDetails" style="margin:12px 0; text-align:center; color:#444;"></div>
   </main>
 
@@ -52,80 +50,80 @@
   </footer>
 
   <script>
-    // Initialize Supabase
-    const supabase = window.supabase.createClient(
-      'https://jcvjjnxvjyhwkyttncqw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjdmpqbnh2anlod2t5dHRuY3F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzOTA2ODMsImV4cCI6MjA2Nzk2NjY4M30.aNsZLlMts4DQxBAkqXkLi0imYUEMr0OPr9vpGxdYQ70' // Replace with your actual anon public key
-    );
+  // Initialize Supabase
+  const supabase = window.supabase.createClient(
+    'https://jcvjjnxvjyhwkyttncqw.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjdmpqbnh2anlod2t5dHRuY3F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzOTA2ODMsImV4cCI6MjA2Nzk2NjY4M30.aNsZLlMts4DQxBAkqXkLi0imYUEMr0OPr9vpGxdYQ70'
+  );
 
-    // Show PDF Metadata
-    async function showPdfDetails() {
-      const { data, error } = await supabase.storage.from('pdf').list('', {
-        limit: 1,
-        sortBy: { column: 'updated_at', order: 'desc' }
-      });
+  // Show PDF Metadata
+  async function showPdfDetails() {
+    const { data, error } = await supabase.storage.from('pdf').list('', {
+      limit: 1,
+      sortBy: { column: 'updated_at', order: 'desc' }
+    });
 
-      if (error || !data || !data.length) return;
+    if (error || !data || !data.length) return;
 
-      const file = data.find(f => f.name === 'latest.pdf');
-      if (!file) return;
+    const file = data.find(f => f.name === 'latest.pdf');
+    if (!file) return;
+    
+    const size = file.metadata && file.metadata.size ? (file.metadata.size / 1024).toFixed(1) + ' KB' : 'Unknown size';
+    
+    document.getElementById('pdfDetails').innerHTML = `
+      <b>File:</b> ${file.name} <br>
+      <b>Size:</b> ${size}
+    `;
+  }
 
-      document.getElementById('pdfDetails').innerHTML = `
-        <b>File:</b> ${file.name} <br>
-        <b>Size:</b> ${file.metadata?.size ? (file.metadata.size / 1024).toFixed(1) + ' KB' : 'Unknown size'} <br>
-        <b>Last Updated:</b> ${new Date(file.updated_at).toLocaleString()}
-      `;
-    }
+  // Load PDF viewer and thumbnail
+  function loadPdf() {
+    const url = `https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf`;
 
-    // Load PDF viewer
-    function loadPdf() {
-      const url = `https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf?v=${Date.now()}`;
+    // Set iframe and fallback links
+    document.getElementById('pdfFrame').src = url;
+    document.getElementById('pdfEmbed').src = url;
+    document.getElementById('fallbackLink').href = url;
 
-      // Set iframe and fallback links
-      document.getElementById('pdfFrame').src = url;
-      document.getElementById('pdfEmbed').src = url;
-      document.getElementById('fallbackLink').href = url;
-
-      // Thumbnail preview
-      const canvas = document.getElementById('pdfThumb');
-      if (window['pdfjsLib']) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
-        pdfjsLib.getDocument(url).promise.then(pdf => {
-          pdf.getPage(1).then(page => {
-            const viewport = page.getViewport({ scale: 0.4 });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            page.render({ canvasContext: canvas.getContext('2d'), viewport });
-          });
-        }).catch(() => {
-          canvas.style.display = 'none';
+    // PDF.js thumbnail
+    const canvas = document.getElementById('pdfThumb');
+    if (window['pdfjsLib'] && window['pdfjsLib'].getDocument) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
+      pdfjsLib.getDocument(url).promise.then(pdf => {
+        pdf.getPage(1).then(page => {
+          // Desktop: scale 0.4, Mobile: scale 0.25
+          const scale = window.innerWidth <= 600 ? 0.25 : 0.4;
+          const viewport = page.getViewport({ scale });
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          page.render({ canvasContext: canvas.getContext('2d'), viewport });
         });
-      }
-    }
-
-    // Share Button Setup
-    window.onload = function () {
-      document.getElementById('shareBtn').onclick = function () {
-        if (navigator.share) {
-          navigator.share({
-            title: document.title,
-            text: 'Check out the latest edition of नव दृष्टिकोन!',
-            url: window.location.href
-          });
-        } else {
-          alert('Sharing is not supported in this browser.');
-        }
-      };
-
-      // Load PDF and Metadata
-      showPdfDetails();
-      loadPdf();
-
-      // Show current date
-      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('mr-IN', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      }).catch(() => {
+        canvas.style.display = 'none';
       });
+    } else {
+      canvas.style.display = 'none';
+    }
+  }
+
+  // Share Button Setup
+  window.onload = function () {
+    document.getElementById('shareBtn').onclick = function () {
+      if (navigator.share) {
+        navigator.share({
+          title: document.title,
+          text: 'Check out the latest edition of नव दृष्टिकोन!',
+          url: window.location.href
+        });
+      } else {
+        alert('Sharing is not supported in this browser.');
+      }
     };
+
+    // Load PDF and Metadata
+    showPdfDetails();
+    loadPdf();
+  };
   </script>
 </body>
 </html>
