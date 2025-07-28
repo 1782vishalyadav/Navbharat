@@ -4,6 +4,7 @@
   <title>नव दृष्टिकोन - Your Daily News</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="index.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
 </head>
 <body>
   <header>
@@ -59,6 +60,27 @@
        <span>Developer: Vishal Yadav</span>
     </div>
   </footer>
+
+<!-- Add this where you want the thumbnail -->
+<canvas id="pdfThumb" width="120" height="160" style="display:block;margin:0 auto 12px auto;border-radius:4px;box-shadow:0 2px 8px #0001;"></canvas>
+<script>
+  const url = "https://jcvjjnxvjyhwkyttncqw.supabase.co/storage/v1/object/public/pdf/latest.pdf?v=" + Date.now();
+  const canvas = document.getElementById('pdfThumb');
+  if (window['pdfjsLib']) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const viewport = page.getViewport({ scale: 0.4 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        page.render({ canvasContext: canvas.getContext('2d'), viewport });
+      });
+    }).catch(e => {
+      canvas.style.display = 'none';
+    });
+  }
+</script>
+
   
 </body>
 </html>
